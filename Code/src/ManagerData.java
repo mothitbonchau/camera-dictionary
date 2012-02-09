@@ -6,16 +6,14 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.ArrayList;
 
-
-
 public class ManagerData {
-	private static String path_data_root ="D:\\Data Dictionary\\Anh-Viet.txt";
+	private static String path_data_root = "D:\\Data Dictionary\\Anh-Viet.txt";
 	private static String path_file_word = "D:\\Data Dictionary\\word.txt";
 	private static String path_file_mean = "D:\\Data Dictionary\\mean.txt";
-	private static String path_file_index="D:\\Data Dictionary\\index.txt";
-	private static String path_file_hash1= "D:\\Data Dictionary\\hash1.txt";
-	private static String path_file_hash2= "D:\\Data Dictionary\\hash2.txt";
-	
+	private static String path_file_index = "D:\\Data Dictionary\\index.txt";
+	private static String path_file_hash1 = "D:\\Data Dictionary\\hash1.txt";
+	private static String path_file_hash2 = "D:\\Data Dictionary\\hash2.txt";
+
 	private ArrayList<Data> _arrData;
 
 	public ArrayList<Data> get_arrData() {
@@ -59,19 +57,18 @@ public class ManagerData {
 		}
 	}
 
-	public void CreateFile_Mean_Word_Index() { //tao 3 file mean, word va index
-		// Writing a file...
+	public void CreateFile_Mean_Word_Index() { // tao 3 file mean, word va index
 
 		try {
 			File file_word = new File(path_file_word);
 			File file_mean = new File(path_file_mean);
 			File file_index = new File(path_file_index);
-			if (!file_word.exists() || !file_mean.exists() ) {
+			if (!file_word.exists() || !file_mean.exists()) {
 
 				file_word.createNewFile();
 				file_mean.createNewFile();
 				file_index.createNewFile();
-				//System.out.println("tao file moi thanh cong");
+				// System.out.println("tao file moi thanh cong");
 			} else {
 				System.out.println("file da ton tai");
 			}
@@ -79,22 +76,22 @@ public class ManagerData {
 			OutputStream out_word = new FileOutputStream(file_word);
 			OutputStream out_mean = new FileOutputStream(file_mean);
 			OutputStream out_index = new FileOutputStream(file_index);
+			// System.out.println(_arrData.get(0).get_mean());
 
 			int pos = 0;
 			for (int i = 0; i < _arrData.size(); i++) {
 				String word = _arrData.get(i).get_key();
 				String mean = _arrData.get(i).get_mean();
-				
+
 				int length = mean.getBytes().length;
 				String s = word + "_" + pos + "_" + length + "\r\n";
 
-				
-				out_mean.write(mean.getBytes());
-				out_word.write((word+"\r\n").getBytes());
+				out_mean.write(mean.getBytes("UTF-8"));
+				out_word.write((word + "\r\n").getBytes());
 				out_index.write(s.getBytes());
-				
+
 				pos += length;
-				// ow.write(_arrData.get(i).get_mean().getBytes());
+
 			}
 			out_word.flush();
 			out_word.close();
@@ -108,20 +105,12 @@ public class ManagerData {
 		}
 	}
 
-	public void CreateFile_Hash1() {
-		//File file = new File("D:\\Data Dictionary\\Hash1.txt");
-
-	}
-
-	public void CreateFileHash2() {
-
+	public void CreateFile_Hash2() {
 		// doc file word roi viet ra bang bam Hash 2
 		try {
-
-			// doc file
+			// doc tung dong file index roi ghi ra mang arrWord
 			BufferedReader in = new BufferedReader(new InputStreamReader(
-					new FileInputStream("D:\\Data Dictionary\\word.txt"),
-					"UTF-8"));
+					new FileInputStream(path_file_index), "UTF-8"));
 			ArrayList<String> arrWord = new ArrayList<>();
 			String code = in.readLine();
 			while (code != null) {
@@ -129,9 +118,8 @@ public class ManagerData {
 				code = in.readLine();
 			}
 
-			// ghi file
-
-			File file = new File("D:\\Data Dictionary\\Hash2.txt");
+			// ghi file Hash2 ( bang bam co 2 tu dau)
+			File file = new File(path_file_hash2);
 			if (!file.exists()) {
 				file.createNewFile();
 			}
@@ -142,19 +130,22 @@ public class ManagerData {
 			for (int i = 0; i < arrWord.size(); i++) {
 				String hash = arrWord.get(i).substring(0, 2);
 
-				if (hash.equals(word_current)) {
+				if (hash.compareToIgnoreCase(word_current)==0) {
 					// tu cu --> tang length
-					length = length + arrWord.get(i).getBytes().length;
+					length = length + arrWord.get(i).getBytes().length + 2;// +2
+																			// la
+																			// ky
+																			// tu
+																			// \r\n
 				} else {
 					// tu moi
-
-					out.write((hash + "_" + pos + "_" + length + "\r\n")
+					out.write((word_current + "_" + pos + "_" + length + "\r\n")
 							.getBytes());
+
 					word_current = hash;
-
-
+					pos += length;
+					length = arrWord.get(i).getBytes().length + 2;
 				}
-				pos = arrWord.get(i).getBytes().length;
 			}
 			out.flush();
 			out.close();
@@ -164,20 +155,161 @@ public class ManagerData {
 
 	}
 
-	public void TraTu() {
+	public void CreateFile_Hash1() {
+		// doc file Hash2 roi viet ra bang bam Hash 1
 		try {
+			// doc tung dong file index roi ghi ra mang arrWord
+			BufferedReader in = new BufferedReader(new InputStreamReader(
+					new FileInputStream(path_file_hash2), "UTF-8"));
+			ArrayList<String> arrWord = new ArrayList<>();
+			String code = in.readLine();
+			while (code != null) {
+				arrWord.add(code);
+				code = in.readLine();
+			}
 
+			// ghi file Hash1 ( bang bam co 1 ky tu dau)
+			File file = new File(path_file_hash1);
+			if (!file.exists()) {
+				file.createNewFile();
+			}
+			String word_current = arrWord.get(0).substring(0, 1);
+			OutputStream out = new FileOutputStream(file);
+			int pos = 0;
+			int length = 0;
+			for (int i = 0; i < arrWord.size(); i++) {
+				String hash = arrWord.get(i).substring(0, 1);
+
+				if (hash.compareToIgnoreCase(word_current)==0) {
+					// tu cu --> tang length
+					length = length + arrWord.get(i).getBytes().length + 2;// +2
+																			// la
+																			// ky
+																			// tu
+																			// \r\n
+				} else {
+					// tu moi
+					out.write((word_current + "_" + pos + "_" + length + "\r\n")
+							.getBytes());
+
+					word_current = hash;
+					pos += length;
+					length = arrWord.get(i).getBytes().length + 2;
+				}
+			}
+			out.flush();
+			out.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	public Word  FindWordIn(String key, char[] block) { //tim tu khoa trong 1 block
+		Word  w = new Word();
+		int iStart = 0;
+		
+		String StrBlock  = new String(block);
+		//iStart = StrBlock.
+		iStart = StrBlock.indexOf(key);
+		
+		
+		
+		
+		char [] buff  = new char[50];
+		int j =0;
+		//doc phan key cua tu
+		while(block[iStart] != '_'){
+			buff[j] =block[iStart];
+			iStart++;
+			j++;
+		}
+		System.out.println(buff);
+		w.set_char(new String(buff));
+		
+		// doc so offset
+		iStart++;
+		j=0;
+		buff = new char[50];
+		while(block[iStart]!='_'){
+			buff[j] = block[iStart];
+			iStart++;
+			j++;
+		}
+
+		w.set_pos(Integer.parseInt(new String(buff,0,j)));
+		System.out.println(buff);
+		//doc phan length
+		iStart++;
+		j=0;
+		buff = new char[50];
+		while(block[iStart]!='\r'){
+			buff[j] = block[iStart];
+			iStart++;
+			j++;
+		}
+		System.out.println(buff);
+		w.set_length(Integer.parseInt(new String(buff,0,j)));
+		return w;
+	}
+
+	public String Lookup(String key) {
+		String mean = "";
+		try {
+			//gd1
+			//doc toan bo file hash1
+			String firstchar = key.substring(0, 1);
+
+			File file_hash1 = new File(path_file_hash1);
 			
 			BufferedReader in = new BufferedReader(new InputStreamReader(
-					new FileInputStream("D:\\Data Dictionary\\mean.txt"),
-					"UTF-8"));
-			char[] cbuf = new char[1000];
-			in.read(cbuf, 0, 69);
-			System.out.println(cbuf);
-			System.out.println("\r\n".getBytes().length);
+					new FileInputStream(path_file_hash1), "UTF-8"));
+			
+			long length_file = file_hash1.length();
+			char[] cbuf = new char[(int)length_file];
+			in.read(cbuf, 0, (int)length_file); // do dai byte can doc
+			Word w_hash1 = FindWordIn(firstchar, cbuf);
+			
+			//gd2
+			//dua vao key 1 ky tu dau tim word roi tim trong hash2
+			
+			
+			BufferedReader in2 = new BufferedReader(new InputStreamReader(
+					new FileInputStream(path_file_hash2), "UTF-8"));
+			
+		
+			cbuf = new char[w_hash1.get_length()];
+			in2.skip(w_hash1.get_pos());
+			in2.read(cbuf, 0, w_hash1.get_length());
+			String secondChar = key.substring(0,2);
+			Word w_hash2  = FindWordIn(secondChar, cbuf);
+			
+			//gd3
+			//dua vao tu khoa key va block tim word tim tu trong index
+			
+			BufferedReader in3 = new BufferedReader(new InputStreamReader(
+					new FileInputStream(path_file_index), "UTF-8"));
+			
+		
+			cbuf = new char[w_hash2.get_length()];
+			in3.skip(w_hash2.get_pos());
+			in3.read(cbuf, 0, w_hash2.get_length());
+			Word w_hash3  = FindWordIn(key, cbuf);
+			
+			//gd4 xuat ra mean cua key
+			BufferedReader in4 = new BufferedReader(new InputStreamReader(
+					new FileInputStream(path_file_mean), "UTF-8"));
+			
+		
+			cbuf = new char[w_hash3.get_length()];
+			in4.skip(w_hash3.get_pos());
+			in4.read(cbuf, 0, w_hash3.get_length());
+			mean = new String(cbuf);
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
+
+		return mean;
 
 	}
 }
