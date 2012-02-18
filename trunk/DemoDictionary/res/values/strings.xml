@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="hello">Hello World, DemoDictionaryActivity!</string>
+    <string name="app_name">DemoDictionary</string>
+    <string name="path_index">mnt/sdcard/dict/anh_viet/index.txt</string>
+    <string name="path_mean">mnt/sdcard/dict/anh_viet/mean.txt</string>
+    <string name="path_hash1">mnt/sdcard/dict/anh_viet/hash1.txt</string>
+    <string name="path_hash2">mnt/sdcard/dict/anh_viet/hash2.txt</string>
+
+</resources>
