@@ -13,7 +13,7 @@ import org.w3c.dom.*;
 
 public class ManagerData {
 	private static String path_data_xml = "D:\\Anh_Viet.xml";
-	private static String path_data_root = "D:\\Data Dictionary\\Anh-Viet.txt";
+	private static String path_data_root = "D:\\Data Dictionary\\av.txt";
 	private static String path_file_word = "D:\\Data Dictionary\\word.txt";
 	private static String path_file_mean = "D:\\Data Dictionary\\mean.txt";
 	private static String path_file_index = "D:\\Data Dictionary\\index.txt";
@@ -39,6 +39,11 @@ public class ManagerData {
 			Data dt = new Data();
 			String mean = "";
 			String code = in.readLine();
+			System.out.println(code);
+			if (!code.startsWith("@")) {
+				code = code.substring(1, code.length());
+				System.out.println(code);
+			}
 			while (code != null) {
 				// u ly code
 				if (code.startsWith("@")) {
@@ -99,6 +104,7 @@ public class ManagerData {
 
 	public void SortABCDictionary() {
 		int length = _arrData.size();
+		System.out.println(length);
 		for (int i = 0; i < length - 1; i++)
 			for (int j = i + 1; j < length; j++) {
 
@@ -196,8 +202,8 @@ public class ManagerData {
 			int length = 0;
 			for (int i = 0; i < arrWord.size(); i++) {
 				String hash = arrWord.get(i).substring(0, 2);
-				if(hash.charAt(1) == '_'){
-					hash = hash.substring(0,1);
+				if (hash.charAt(1) == '_') {
+					hash = hash.substring(0, 1);
 				}
 				if (hash.compareToIgnoreCase(word_current) == 0) {
 					// tu cu --> tang length
@@ -335,7 +341,6 @@ public class ManagerData {
 
 			File file_hash1 = new File(path_file_hash1);
 
-			
 			BufferedReader in = new BufferedReader(new InputStreamReader(
 					new FileInputStream(path_file_hash1), "UTF-8"));
 
@@ -347,15 +352,15 @@ public class ManagerData {
 			// gd2
 			// dua vao key 1 ky tu dau tim word roi tim trong hash2
 			RandomAccessFile raf = new RandomAccessFile(file_hash1, "rw");
-			
-			//BufferedReader in2 = new BufferedReader(new InputStreamReader(
-				//	new FileInputStream(path_file_hash2), "UTF-8"));
+
+			// BufferedReader in2 = new BufferedReader(new InputStreamReader(
+			// new FileInputStream(path_file_hash2), "UTF-8"));
 
 			byte[] cbuf1 = new byte[w_hash1.get_length()];
 			raf.seek(w_hash1.get_pos());
 			raf.read(cbuf1, 0, w_hash1.get_length());
-			//in2.skip(w_hash1.get_pos());
-			//in2.read(cbuf, 0, w_hash1.get_length());
+			// in2.skip(w_hash1.get_pos());
+			// in2.read(cbuf, 0, w_hash1.get_length());
 			String secondChar = key.substring(0, 2);
 			// System.out.println(cbuf);
 			Word w_hash2 = FindWordIn(secondChar, cbuf);
