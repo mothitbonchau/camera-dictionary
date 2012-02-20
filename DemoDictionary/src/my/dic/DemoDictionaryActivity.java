@@ -2,9 +2,11 @@ package my.dic;
 
 import java.util.ArrayList;
 
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Gravity;
@@ -23,6 +25,9 @@ public class DemoDictionaryActivity extends Activity {
 	private ArrayList<Word> mListWord = null;
 
 	public DataProvider mDataProvider = null;
+
+	private Handler mHandler;
+	private Runnable mUpdateTimeTask;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -64,6 +69,23 @@ public class DemoDictionaryActivity extends Activity {
 				R.layout.list_item);
 		// khoi tao danh sach ban dau truoc
 
+		mHandler = new Handler();
+
+		mUpdateTimeTask = new Runnable() {
+			public void run() {
+				String textKey = etKey.getText().toString();
+				if (textKey.length() > 0) {
+					etKey.setEnabled(false);
+					ShowWordList(textKey);
+					etKey.setEnabled(true);
+				} else {
+					LoadListWhenTextNull();
+				}
+				etKey.requestFocus();
+
+			}
+		};
+
 		etKey.addTextChangedListener(new TextWatcher() {
 			public void onTextChanged(CharSequence s, int start, int before,
 					int count) {
@@ -75,13 +97,8 @@ public class DemoDictionaryActivity extends Activity {
 
 			public void afterTextChanged(Editable s) {
 				// TODO Auto-generated method stub
-				String textKey = etKey.getText().toString();
-				if (textKey.length() > 0) {
-					ShowWordList(textKey);
-				} else {
-					LoadListWhenTextNull();
-				}
-
+				mHandler.removeCallbacks(mUpdateTimeTask);
+				mHandler.postDelayed(mUpdateTimeTask, 500);
 			}
 		});
 		lvListKey.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -89,15 +106,15 @@ public class DemoDictionaryActivity extends Activity {
 			// @Override
 			public void onItemClick(AdapterView<?> arg0, View v, int position,
 					long arg3) {
-				
-				  Intent i = new Intent(v.getContext(), MeanActivity.class); //
-				 i.putExtra( "id", position); i.putExtra("word",
-				  mAdapter.getItem(position)); i.putExtra("pos",
-				  mListWord.get(position).get_pos()); i.putExtra("length",
-				  mListWord.get(position).get_length());
-				  startActivityForResult(i, 0);
-				 
-				//ShowResult(mListWord.get(position));
+
+				Intent i = new Intent(v.getContext(), MeanActivity.class); //
+				i.putExtra("id", position);
+				i.putExtra("word", mAdapter.getItem(position));
+				i.putExtra("pos", mListWord.get(position).get_pos());
+				i.putExtra("length", mListWord.get(position).get_length());
+				startActivityForResult(i, 0);
+
+				// ShowResult(mListWord.get(position));
 				etKey.selectAll();
 			}
 		});
