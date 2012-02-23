@@ -10,7 +10,8 @@
         android:id="@+id/editText1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" 
-        android:hint="type here">
+        android:hint="type here"
+        android:singleLine="true">
   
 		
         <requestFocus />
