@@ -15,7 +15,14 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.45"
             android:text="Large Text"
+            android:textStyle="bold"
             android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sound" />
 
         <Button
             android:id="@+id/button1"
@@ -29,6 +36,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Medium Text"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceMedium" 
+        android:ellipsize="marquee"
+        android:marqueeRepeatLimit ="marquee_forever"
+        android:focusable="true"
+        android:focusableInTouchMode="true"/>
 
 </LinearLayout>
