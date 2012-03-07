@@ -9,10 +9,9 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.TextToSpeech.OnInitListener;
-import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
-import android.text.style.UnderlineSpan;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -89,9 +88,11 @@ public class MeanActivity extends Activity implements OnInitListener {
 
 		tvKey.setText(mKey);
 		mMean = DataProvider.LoookKup(mPos, mLength);
-		// Log.i("dfs",mMean);
+		Log.i("dfs",mMean);
 		CharSequence text = FormatText(mMean);
+		//tvMean.setText("đường phan văn trị\r\n hữu thọ");
 		tvMean.setText(text);
+		//tvMean.setText(Html.fromHtml(mMean).toString());
 	}
 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -134,22 +135,21 @@ public class MeanActivity extends Activity implements OnInitListener {
 		rs = FormattedText.setStyle_NotDelete(rs, "[", "]",
 				new ForegroundColorSpan(Color.GREEN));
 		// dinh dang phan loai tu
-		rs = FormattedText.setStyle_NotDelete(rs, "*", "\r\n",
-				new ForegroundColorSpan(Color.RED));
+		//rs = FormattedText.setStyle_KindOfWord(rs, "*","\r\n",
+		//		new ForegroundColorSpan(Color.RED));
 		// cac vi du
-		rs = FormattedText.setStyle_NotDelete(rs, "=$", ":", new StyleSpan(
-				Typeface.ITALIC));
-		/*rs = FormattedText.setStyle_NotDelete(rs, "!$", ":",
-				new ForegroundColorSpan(0xFF4444FF), new UnderlineSpan(),
-				new ClickableSpan() {
-					@Override
-					public void onClick(View widget) {
-						// When the span is clicked, show some text on-screen.
-						//
-						// findViewById(R.id.clicked_text).setVisibility(View.VISIBLE);
-					}
-				});*/
-		//rs = FormattedText.ReplaceText(text, "$", " ");
+		//rs = FormattedText.setStyle_Example(rs, "=$", ":", new StyleSpan(
+		//		Typeface.ITALIC));
+		/*
+		  rs = FormattedText.setStyle_NotDelete(rs, "!$", ":", new
+		 * ForegroundColorSpan(0xFF4444FF), new UnderlineSpan(), new
+		 * ClickableSpan() {
+		 * 
+		 * @Override public void onClick(View widget) { // When the span is
+		 * clicked, show some text on-screen. // //
+		 * findViewById(R.id.clicked_text).setVisibility(View.VISIBLE); } });
+		 */
+		// rs = FormattedText.ReplaceText(text, "$", " ");
 		return rs;
 	}
 }
